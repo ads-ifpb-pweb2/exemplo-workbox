@@ -1,0 +1,70 @@
+{
+  "eventos": [
+    {
+      "id": "81c57c43-aca7-4ab2-9bb3-a3bf60f9708c",
+      "nome": "Esquenta do Cajarock",
+      "data": "07/26/2025",
+      "descricao": "Esquenta para o evento Cajarock"
+    },
+    {
+      "id": "b2e1f8a7-4c3e-4e2a-9d2e-1a2b3c4d5e6f",
+      "nome": "Festival de Inverno",
+      "data": "08/15/2025",
+      "descricao": "Festival anual de música e arte no inverno"
+    },
+    {
+      "id": "c3d2e1f8-7a4b-4e2a-8d2e-2b3c4d5e6f7a",
+      "nome": "Feira de Tecnologia",
+      "data": "09/10/2025",
+      "descricao": "Exposição de inovações tecnológicas"
+    },
+    {
+      "id": "d4e3f2a1-8b5c-4e2a-7d2e-3c4d5e6f7a8b",
+      "nome": "Semana do Livro",
+      "data": "10/05/2025",
+      "descricao": "Eventos e palestras sobre literatura"
+    },
+    {
+      "id": "e5f4a3b2-9c6d-4e2a-6d2e-4d5e6f7a8b9c",
+      "nome": "Corrida Solidária",
+      "data": "11/20/2025",
+      "descricao": "Corrida beneficente para arrecadação de fundos"
+    },
+    {
+      "id": "f6a5b4c3-0d7e-4e2a-5d2e-5e6f7a8b9c0d",
+      "nome": "Mostra de Cinema",
+      "data": "12/12/2025",
+      "descricao": "Exibição de filmes independentes"
+    },
+    {
+      "id": "a7b6c5d4-1e8f-4e2a-4d2e-6f7a8b9c0d1e",
+      "nome": "Encontro de Startups",
+      "data": "01/18/2026",
+      "descricao": "Networking e palestras para empreendedores"
+    },
+    {
+      "id": "b8c7d6e5-2f9a-4e2a-3d2e-7a8b9c0d1e2f",
+      "nome": "Oficina de Fotografia",
+      "data": "02/22/2026",
+      "descricao": "Workshop prático de fotografia"
+    },
+    {
+      "id": "c9d8e7f6-3a0b-4e2a-2d2e-8b9c0d1e2f3a",
+      "nome": "Festival Gastronômico",
+      "data": "03/14/2026",
+      "descricao": "Degustação de pratos típicos"
+    },
+    {
+      "id": "d0e9f8a7-4b1c-4e2a-1d2e-9c0d1e2f3a4b",
+      "nome": "Simpósio de Educação",
+      "data": "04/09/2026",
+      "descricao": "Debates e palestras sobre educação"
+    },
+    {
+      "id": "e1f0a9b8-5c2d-4e2a-0d2e-0d1e2f3a4b5c",
+      "nome": "Hackathon Universitário",
+      "data": "05/30/2026",
+      "descricao": "Competição de programação para estudantes"
+    }
+  ]
+}
