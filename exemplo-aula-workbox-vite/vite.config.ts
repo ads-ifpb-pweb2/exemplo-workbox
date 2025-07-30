@@ -21,7 +21,7 @@ export default defineConfig({
             options: {
               cacheName: "backend-cache",
               expiration: {
-                maxEntries: 10,
+                maxEntries: 30,
                 maxAgeSeconds: 60 * 60 * 24, // 1 dia
               },
             },
@@ -37,10 +37,20 @@ export default defineConfig({
               },
             },
           },
+          {
+            urlPattern: ({ request }) => request.destination === "image",
+            handler: "CacheFirst",
+            options: {
+              cacheName: "images-cache",
+              expiration: {
+                maxEntries: 20,
+                maxAgeSeconds: 60 * 60 * 24, // 1 dia
+              },
+            },
+          },
         ],
       },
     }),
     react(),
   ],
 });
-

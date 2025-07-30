@@ -15,6 +15,11 @@ function App() {
   return (
     <>
       <h1>App de Eventos</h1>
+      <img
+        src="https://upload.wikimedia.org/wikipedia/commons/9/98/GAM-Eventos-logo-principal-jpg.jpg"
+        alt="App de Eventos"
+        crossOrigin="anonymous"
+      />
       <ul>
         {eventos.map((evt) => (
           <li key={evt.id}>
@@ -27,4 +32,3 @@ function App() {
 }
 
 export default App;
-
