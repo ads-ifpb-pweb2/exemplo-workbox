@@ -1,6 +1,6 @@
 # Exemplos de PWA com Workbox
 
-Este repositório contém dois projetos de exemplo que demonstram como adicionar suporte a PWA (Progressive Web App) e cache offline usando **Workbox**, cada um com uma abordagem diferente de integração.
+Este repositório contém projetos de exemplo que demonstram como adicionar suporte a PWA (Progressive Web App) e cache offline usando **Workbox**, cada um com uma abordagem diferente de integração.
 
 ## Pré-requisitos
 
@@ -98,23 +98,86 @@ Serve o conteúdo de `dist/` em `http://localhost:4173` com o Service Worker ati
 
 ---
 
-## Estratégias de cache configuradas
+### 3. `exemplo-aula-workbox-background-sync` + `exemplo-aula-workbox-background-sync-backend` — Background Sync com Workbox
 
-Ambos os projetos configuram caching para uma API local em `http://localhost:3000`. Para testar o comportamento offline, essa API deve estar rodando antes de acessar a aplicação pela primeira vez.
+Exemplo full-stack que demonstra o **Workbox Background Sync**: um formulário de cadastro de receitas e despesas que funciona offline. Requisições feitas sem conexão são enfileiradas na **IndexedDB** e reenviadas automaticamente pelo Service Worker quando a conexão é restabelecida.
 
-| Recurso | Estratégia | Projeto CLI | Projeto Vite Plugin |
-|---|---|---|---|
-| Navegação (páginas) | NetworkFirst / CacheFirst | NetworkFirst | CacheFirst |
-| Requisições ao backend (`localhost:3000`) | NetworkFirst / CacheFirst | NetworkFirst | CacheFirst |
-| Imagens | CacheFirst | — | CacheFirst |
+#### Stack
+
+| Camada | Tecnologia |
+|---|---|
+| Frontend | React 19 + TypeScript + Vite + Tailwind CSS |
+| PWA / Service Worker | `vite-plugin-pwa` + Workbox (`Queue`, `NetworkOnly`) |
+| Backend | Spring Boot 4 + Spring Data JPA + H2 (embarcado) |
+
+#### Arquitetura do Service Worker
+
+O SW usa `Queue` do `workbox-background-sync` com um `onSync` customizado:
+
+- **Online:** `POST /api/transacoes` passa direto para o backend (`NetworkOnly`)
+- **Offline:** o plugin `fetchDidFail` enfileira a requisição na IndexedDB (`workbox-background-sync` / store `requests`)
+- **Volta online:** o browser dispara o evento `sync` → SW reenvia cada requisição → notifica a página via `postMessage({ type: 'TRANSACOES_SINCRONIZADAS' })`
+
+A página lê as entradas pendentes diretamente da IndexedDB (`src/pending.ts`) e as exibe na lista com um badge "Pendente".
+
+#### Rodando o backend
+
+```bash
+cd exemplo-aula-workbox-background-sync-backend
+./mvnw spring-boot:run
+```
+
+API disponível em `http://localhost:8080`.  
+Console H2 disponível em `http://localhost:8080/h2-console`.
+
+#### Rodando o frontend
+
+```bash
+cd exemplo-aula-workbox-background-sync
+npm install
+npm run dev      # desenvolvimento (SW ativo via devOptions)
+```
+
+Aplicação disponível em `http://localhost:5173`.
+
+#### Build e preview
+
+```bash
+npm run build
+npm run preview  # http://localhost:4173
+```
+
+#### Testando o Background Sync
+
+1. Acesse `http://localhost:5173` com o backend rodando
+2. Abra DevTools → **Application → Service Workers** e confirme que o SW está ativo
+3. Adicione uma transação — o `POST` deve aparecer no Network com status `201`
+4. Em DevTools → **Network**, marque **Offline**
+5. Adicione outra transação — a UI mostra o badge "Pendente" e o item aparece listrado
+6. Inspecione **Application → IndexedDB → workbox-background-sync → requests** para ver a entrada enfileirada
+7. Desmarque **Offline** — o SW recebe o evento `sync`, reenvia o `POST` e notifica a página
+8. A transação sai de "Pendente" e entra na lista confirmada
+
+---
+
+## Estratégias de cache
+
+| Recurso | Estratégia | CLI | Vite Plugin | Background Sync |
+|---|---|---|---|---|
+| Navegação (páginas) | NetworkFirst / CacheFirst | NetworkFirst | CacheFirst | Precache |
+| Requisições GET ao backend | NetworkFirst / CacheFirst | NetworkFirst | CacheFirst | — |
+| Requisições POST ao backend | — | — | — | NetworkOnly + Queue |
+| Imagens | CacheFirst | — | CacheFirst | — |
 
 ---
 
 ## Diferenças entre as abordagens
 
-| | Workbox CLI | vite-plugin-pwa |
-|---|---|---|
-| Integração | Pós-build, comando separado | Nativa no build do Vite |
-| Dev com SW ativo | Não | Sim |
-| Configuração | `workbox-config.js` | `vite.config.ts` |
-| Flexibilidade | Alta (controle total do SW) | Moderada (abstrai detalhes) |
+| | Workbox CLI | vite-plugin-pwa | Background Sync |
+|---|---|---|---|
+| Integração | Pós-build, comando separado | Nativa no build do Vite | Nativa no build do Vite |
+| Dev com SW ativo | Não | Sim | Sim |
+| Configuração | `workbox-config.js` | `vite.config.ts` | `vite.config.ts` + `sw.ts` customizado |
+| Offline para leituras | Sim (cache) | Sim (cache) | Sim (precache) |
+| Offline para escritas | Não | Não | Sim (Background Sync) |
+| Complexidade | Baixa | Baixa | Média |
